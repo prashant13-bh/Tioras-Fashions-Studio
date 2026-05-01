@@ -36,7 +36,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import pb from "@/lib/pocketbase";
-import { decrypt } from "@/lib/security-core";
+
 
 export default function AdminOrdersPage() {
   const { isAdmin, loading: authLoading } = useAdminAuth();
@@ -169,16 +169,7 @@ export default function AdminOrdersPage() {
                   <TableRow key={order.id} className="group hover:bg-muted/20 transition-colors">
                     <TableCell className="font-extrabold py-4 pl-6">{order.id}</TableCell>
                     <TableCell className="font-medium">
-                      {order.shipping_address ? (
-                        (() => {
-                          const decrypted = decrypt(order.shipping_address);
-                          try {
-                            return JSON.parse(decrypted).fullName;
-                          } catch {
-                            return order.customer;
-                          }
-                        })()
-                      ) : order.customer}
+                      {order.customerName || order.customer}
                     </TableCell>
                     <TableCell className="text-muted-foreground">{order.date}</TableCell>
                     <TableCell className="font-bold text-primary">₹{order.total}</TableCell>

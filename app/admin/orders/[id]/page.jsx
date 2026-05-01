@@ -21,7 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { decrypt } from "@/lib/security-core";
+import pb from "@/lib/pocketbase";
 
 export default function AdminOrderDetailPage() {
   const params = useParams();
