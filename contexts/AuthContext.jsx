@@ -39,24 +39,35 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       return { success: true, user: authData.record };
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Login Error Details:", {
+        message: error.message,
+        data: error.data,
+        status: error.status
+      });
       return { success: false, error: error.message };
     }
   };
 
   const signup = async (email, password, passwordConfirm, name) => {
     try {
+      // Remove 'role' as it might not exist or be restricted in PocketBase
       const record = await pb.collection("users").create({
         email,
+        emailVisibility: true,
         password,
         passwordConfirm,
         name,
-        role: "user",
       });
-      await login(email, password);
+      
+      // Auto-login after signup
+      const authData = await pb.collection("users").authWithPassword(email, password);
       return { success: true, user: record };
     } catch (error) {
-      console.error("Signup error:", error);
+      console.error("Signup Error Details:", {
+        message: error.message,
+        data: error.data,
+        status: error.status
+      });
       return { success: false, error: error.message };
     }
   };
