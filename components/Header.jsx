@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { ThemeToggle } from "./ThemeToggle";
 
 const navLinks = [
   { href: "/products", label: "Shop" },
@@ -95,6 +96,9 @@ export default function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-1 md:gap-2">
+            {/* Theme Toggle */}
+            <ThemeToggle />
+
             {/* Search */}
             <Button
               variant="ghost"

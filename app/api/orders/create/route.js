@@ -29,25 +29,25 @@ export async function POST(req) {
     }
 
     const sanitizedAddress = {
-      fullName: sanitizeInput(shippingAddress.fullName),
-      phone: sanitizeInput(shippingAddress.phone),
-      street: sanitizeInput(shippingAddress.street),
-      city: sanitizeInput(shippingAddress.city),
-      state: sanitizeInput(shippingAddress.state),
-      zipCode: sanitizeInput(shippingAddress.zipCode),
+      fullName: await sanitizeInput(shippingAddress.fullName),
+      phone: await sanitizeInput(shippingAddress.phone),
+      street: await sanitizeInput(shippingAddress.street),
+      city: await sanitizeInput(shippingAddress.city),
+      state: await sanitizeInput(shippingAddress.state),
+      zipCode: await sanitizeInput(shippingAddress.zipCode),
       country: "India",
     };
 
     // 2. AES-256 Encryption for Data at Rest (Zero Trust)
     // We encrypt sensitive customer data before storing it in the DB
-    const encryptedAddress = encrypt(JSON.stringify(sanitizedAddress));
+    const encryptedAddress = await encrypt(JSON.stringify(sanitizedAddress));
 
     const orderData = {
       user: pb.authStore.model?.id || null,
       status: "pending",
       items: JSON.stringify(items), // Already sanitized or controlled
       shipping_address: encryptedAddress, // STORED ENCRYPTED
-      shipping_method: sanitizeInput(shippingMethod),
+      shipping_method: await sanitizeInput(shippingMethod),
       shipping_cost: shippingCost,
       subtotal: subtotal,
       tax: tax,

@@ -210,6 +210,53 @@ export default function HomePage() {
                 />
               ))}
             </div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1, duration: 1 }}
+              className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:block"
+            >
+              <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-1">
+                <motion.div
+                  animate={{ y: [0, 12, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="w-1 h-2 bg-white rounded-full"
+                />
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── CATEGORIES ── */}
+        <section className="py-20 bg-background overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-extrabold mb-4 font-heading">Shop by Category</h2>
+              <div className="w-20 h-1.5 gradient-primary mx-auto rounded-full" />
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+              {[
+                { name: "T-Shirts", img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&q=80&w=800", count: "120+ Items" },
+                { name: "Hoodies", img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=800", count: "85+ Items" },
+                { name: "Caps", img: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80&w=800", count: "40+ Items" },
+                { name: "Sweatshirts", img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=800", count: "60+ Items" },
+              ].map((cat, i) => (
+                <Link key={cat.name} href={`/products?category=${cat.name.toLowerCase()}`} className="group relative aspect-[4/5] overflow-hidden rounded-3xl bg-muted">
+                  <img 
+                    src={cat.img} 
+                    alt={cat.name} 
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-6 left-6 text-white">
+                    <p className="text-xs font-bold uppercase tracking-widest text-accent mb-1">{cat.count}</p>
+                    <h3 className="text-xl md:text-2xl font-extrabold font-heading">{cat.name}</h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
 

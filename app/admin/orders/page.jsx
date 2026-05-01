@@ -36,6 +36,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import pb from "@/lib/pocketbase";
+import { decrypt } from "@/lib/security-core";
 
 
 export default function AdminOrdersPage() {
@@ -52,50 +53,46 @@ export default function AdminOrdersPage() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        // In production, fetch from PocketBase 'orders' collection
-        // const records = await pb.collection('orders').getFullList({ sort: '-created' });
-        // setOrders(records);
-        
-        // Mock data for now
-        setOrders([
-          {
-            id: "ORD-7241",
-            customer: "Arjun Mehta",
-            date: "2024-04-20",
-            total: "2,499",
-            status: "Processing",
-            payment: "Paid",
-            hasCustomization: true,
-          },
-          {
-            id: "ORD-7242",
-            customer: "Priya Sharma",
-            date: "2024-04-19",
-            total: "1,299",
-            status: "Shipped",
-            payment: "Paid",
-            hasCustomization: false,
-          },
-          {
-            id: "ORD-7243",
-            customer: "Rahul Deshmukh",
-            date: "2024-04-19",
-            total: "3,500",
-            status: "Delivered",
-            payment: "Paid",
-            hasCustomization: true,
-          },
-          {
-            id: "ORD-7244",
-            customer: "Sneha Kapur",
-            date: "2024-04-18",
-            total: "899",
-            status: "Pending",
-            payment: "Unpaid",
-            hasCustomization: false,
-          },
-        ]);
+        setLoading(true);
+        // 1. Fetch real orders from PocketBase
+        const records = await pb.collection('orders').getFullList({ 
+          sort: '-created',
+          requestKey: null // Prevent cancellation
+        });
+
+        // 2. Decrypt customer names from shipping addresses
+        const ordersWithDecryptedNames = await Promise.all(records.map(async (order) => {
+          if (order.shipping_address) {
+            try {
+              const decrypted = await decrypt(order.shipping_address);
+              const address = JSON.parse(decrypted);
+              return { 
+                ...order, 
+                customerName: address.fullName,
+                date: new Date(order.created).toLocaleDateString(),
+                total: order.total_amount,
+                payment: order.payment_status === 'paid' ? 'Paid' : 'Unpaid'
+              };
+            } catch (e) {
+              return { 
+                ...order, 
+                date: new Date(order.created).toLocaleDateString(),
+                total: order.total_amount,
+                payment: order.payment_status === 'paid' ? 'Paid' : 'Unpaid'
+              };
+            }
+          }
+          return { 
+            ...order, 
+            date: new Date(order.created).toLocaleDateString(),
+            total: order.total_amount,
+            payment: order.payment_status === 'paid' ? 'Paid' : 'Unpaid'
+          };
+        }));
+
+        setOrders(ordersWithDecryptedNames);
       } catch (err) {
+        console.error("Failed to load orders:", err);
         toast.error("Failed to load orders");
       } finally {
         setLoading(false);

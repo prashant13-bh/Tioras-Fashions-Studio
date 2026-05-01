@@ -5,6 +5,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { CartProvider } from "@/hooks/useCart";
 import { WishlistProvider } from "@/contexts/WishlistContext";
+import BottomNav from "@/components/BottomNav";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -55,13 +56,14 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
       className={`${outfit.variable} ${jakarta.variable} ${playfair.variable}`}
     >
-      <body className="font-body antialiased">
+      <body className="font-body antialiased pb-20 lg:pb-0">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>
             <AdminAuthProvider>
               <WishlistProvider>
                 <CartProvider>
                   {children}
+                  <BottomNav />
                   <Toaster richColors position="top-right" />
                 </CartProvider>
               </WishlistProvider>

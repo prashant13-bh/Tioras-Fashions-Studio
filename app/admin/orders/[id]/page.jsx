@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import pb from "@/lib/pocketbase";
+import { decrypt } from "@/lib/security-core";
 
 export default function AdminOrderDetailPage() {
   const params = useParams();
@@ -37,42 +38,28 @@ export default function AdminOrderDetailPage() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        // Mocking a single order detail
-        const mockOrder = {
-          id: params.id || "ORD-7241",
-          date: "April 20, 2024 at 2:45 PM",
-          status: "Processing",
-          payment_status: "Paid",
-          payment_method: "Razorpay (UPI)",
-          subtotal: 2199,
-          shipping_cost: 0,
-          tax: 300,
-          total: 2499,
-          shipping_address: "decrypted_placeholder", // Logic below handles real decryption
-          items: [
-            {
-              name: "Premium Cotton T-Shirt",
-              variant: "Black / XL",
-              quantity: 2,
-              price: 899,
-              customization: {
-                type: "print",
-                notes: "Center chest, 5 inches wide",
-                fileUrl: "https://images.unsplash.com/photo-1570733577524-3a047079e80d?w=200&q=80"
-              }
-            },
-            {
-              name: "Embroidered Hoodie",
-              variant: "Navy / L",
-              quantity: 1,
-              price: 1299,
-              customization: null
-            }
-          ]
-        };
-        setOrder(mockOrder);
+        setLoading(true);
+        const record = await pb.collection('orders').getOne(params.id);
+        
+        let decryptedAddress = null;
+        if (record.shipping_address) {
+          try {
+            const decrypted = await decrypt(record.shipping_address);
+            decryptedAddress = JSON.parse(decrypted);
+          } catch (e) {
+            console.error("Address decryption failed");
+          }
+        }
+
+        setOrder({
+          ...record,
+          address: decryptedAddress,
+          date: new Date(record.created).toLocaleString(),
+          items: typeof record.items === 'string' ? JSON.parse(record.items) : record.items
+        });
       } catch (err) {
-        toast.error("Failed to load order details");
+        toast.error("Order not found or access denied");
+        router.push("/admin/orders");
       } finally {
         setLoading(false);
       }
@@ -162,12 +149,18 @@ export default function AdminOrderDetailPage() {
                 <CardTitle className="text-sm font-bold text-muted-foreground">Shipping Address</CardTitle>
               </CardHeader>
               <CardContent className="space-y-1">
-                <p className="font-bold">Arjun Mehta</p>
-                <p className="text-sm text-muted-foreground">742 Evergreen Terrace, Koramangala 4th Block</p>
-                <p className="text-sm text-muted-foreground">Bengaluru, Karnataka - 560034</p>
-                <div className="pt-2 flex items-center gap-4">
-                  <span className="flex items-center gap-1 text-xs font-bold text-primary"><Phone className="w-3 h-3" /> +91 98765 43210</span>
-                </div>
+                {order.address ? (
+                  <>
+                    <p className="font-bold">{order.address.fullName}</p>
+                    <p className="text-sm text-muted-foreground">{order.address.street}</p>
+                    <p className="text-sm text-muted-foreground">{order.address.city}, {order.address.state} - {order.address.zipCode}</p>
+                    <div className="pt-2 flex items-center gap-4">
+                      <span className="flex items-center gap-1 text-xs font-bold text-primary"><Phone className="w-3 h-3" /> {order.address.phone}</span>
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-sm text-muted-foreground italic">No address provided or decryption failed</p>
+                )}
               </CardContent>
             </Card>
             <Card className="premium-card">
