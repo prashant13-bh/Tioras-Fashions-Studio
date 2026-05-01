@@ -64,7 +64,7 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
+        scrolled || pathname !== "/"
           ? "bg-background/80 backdrop-blur-xl shadow-premium border-b border-white/10 py-2"
           : "bg-transparent py-4 md:py-6"
       }`}
@@ -75,7 +75,7 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-2 shrink-0 group">
             <span className={`text-2xl md:text-3xl font-black font-heading tracking-tighter transition-colors duration-300 ${
               !mounted ? "text-primary" : 
-              scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"
+              (scrolled || pathname !== "/") ? "text-primary" : "text-primary md:text-white"
             }`}>
               TIORAS<span className="text-accent italic">.</span>
             </span>
@@ -92,7 +92,7 @@ export default function Header() {
                     ? "text-primary-foreground bg-primary shadow-lg scale-105"
                     : `hover:text-primary hover:bg-white/10 ${
                         !mounted ? "text-muted-foreground" :
-                        scrolled ? "text-muted-foreground" : "text-muted-foreground md:text-white/70"
+                        (scrolled || pathname !== "/") ? "text-muted-foreground" : "text-muted-foreground md:text-white/70"
                       }`
                 }`}
               >
@@ -112,7 +112,7 @@ export default function Header() {
                 onClick={() => setSearchOpen(!searchOpen)}
                 className={`rounded-full transition-colors ${
                   !mounted ? "text-primary" :
-                  scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"
+                  (scrolled || pathname !== "/") ? "text-primary" : "text-primary md:text-white"
                 }`}
                 aria-label="Search"
                 >
@@ -128,7 +128,7 @@ export default function Header() {
                     size="icon"
                     className={`rounded-full relative ${
                       !mounted ? "text-primary" :
-                      scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"
+                      (scrolled || pathname !== "/") ? "text-primary" : "text-primary md:text-white"
                     }`}
                     aria-label="Wishlist"
                 >
@@ -148,7 +148,7 @@ export default function Header() {
                     size="icon"
                     className={`rounded-full relative ${
                       !mounted ? "text-primary" :
-                      scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"
+                      (scrolled || pathname !== "/") ? "text-primary" : "text-primary md:text-white"
                     }`}
                     aria-label="Cart"
                 >
@@ -168,7 +168,7 @@ export default function Header() {
                     size="icon"
                     className={`rounded-full ${
                       !mounted ? "text-primary" :
-                      scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"
+                      (scrolled || pathname !== "/") ? "text-primary" : "text-primary md:text-white"
                     }`}
                     aria-label="Account"
                 >
@@ -184,7 +184,7 @@ export default function Header() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className={`lg:hidden rounded-full ${
                 !mounted ? "text-primary" :
-                scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"
+                (scrolled || pathname !== "/") ? "text-primary" : "text-primary md:text-white"
               }`}
               aria-label="Menu"
             >
