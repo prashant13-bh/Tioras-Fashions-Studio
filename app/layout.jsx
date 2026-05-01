@@ -46,8 +46,18 @@ export const metadata = {
   openGraph: {
     title: "TioraS Fashions Studio",
     description: "Premium Custom Apparel — Print & Embroidery",
+    url: "https://tiorasfashions.com",
+    siteName: "TioraS Fashions Studio",
+    locale: "en_IN",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "TioraS Fashions Studio | Premium Custom Apparel",
+    description: "Premium embroidery & custom printing studio. Design your signature today.",
+    creator: "@tiorasfashions",
+  },
+  themeColor: "#0f172a",
 };
 
 export default function RootLayout({ children }) {

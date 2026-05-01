@@ -10,18 +10,64 @@ export default function AdminDashboard() {
   const { isAdmin, loading } = useAdminAuth();
   const router = useRouter();
   const [stats, setStats] = useState({
-    revenue: "48,250",
-    orders: "156",
-    customers: "1,240",
-    products: "42",
-    revenueChange: "+12.5%",
-    ordersChange: "+8.2%",
+    revenue: "0",
+    orders: "0",
+    customers: "0",
+    products: "0",
+    revenueChange: "+0%",
+    ordersChange: "+0%",
   });
+  const [recentOrders, setRecentOrders] = useState([]);
+  const [topProducts, setTopProducts] = useState([]);
 
   useEffect(() => {
     if (!loading && !isAdmin) {
       router.push("/admin/login");
+      return;
     }
+
+    const fetchStats = async () => {
+      try {
+        const [orders, customers, products] = await Promise.all([
+          adminPb.collection("orders").getList(1, 1, { sort: "-created" }),
+          adminPb.collection("users").getList(1, 1, { filter: 'role = "user"' }),
+          adminPb.collection("products").getList(1, 1, { filter: "active = true" }),
+        ]);
+
+        // Calculate total revenue from all orders
+        const allOrders = await adminPb.collection("orders").getFullList({
+          filter: 'status = "paid"',
+        });
+        const totalRevenue = allOrders.reduce((sum, order) => sum + (order.total_amount || 0), 0);
+
+        setStats({
+          revenue: totalRevenue.toLocaleString(),
+          orders: orders.totalItems.toString(),
+          customers: customers.totalItems.toString(),
+          products: products.totalItems.toString(),
+          revenueChange: "+100%", // Placeholder for now
+          ordersChange: `+${orders.totalItems}`,
+        });
+
+        // Fetch recent orders
+        const recent = await adminPb.collection("orders").getList(1, 5, {
+          sort: "-created",
+          expand: "user",
+        });
+        setRecentOrders(recent.items);
+
+        // Fetch top products (simplified as just active products for now)
+        const top = await adminPb.collection("products").getList(1, 4, {
+          sort: "-created",
+        });
+        setTopProducts(top.items);
+
+      } catch (err) {
+        console.error("Dashboard Fetch Error:", err);
+      }
+    };
+
+    if (isAdmin) fetchStats();
   }, [isAdmin, loading, router]);
 
   if (loading || !isAdmin) {
@@ -88,54 +134,78 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2">
         <Card className="premium-card">
           <CardHeader>
             <CardTitle className="text-lg font-bold font-heading">Recent Orders</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center font-bold text-sm text-muted-foreground">#{(2450 + i)}</div>
-                    <div>
-                      <p className="text-sm font-bold">Customer Name</p>
-                      <p className="text-xs text-muted-foreground">2 mins ago</p>
+              {recentOrders.length > 0 ? (
+                recentOrders.map((order) => (
+                  <div key={order.id} className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-xs text-primary">
+                        {order.expand?.user?.name?.charAt(0) || "U"}
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold">{order.expand?.user?.name || "Anonymous"}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(order.created).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold">₹{order.total_amount?.toLocaleString()}</p>
+                      <span className={`text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full ${
+                        order.status === "paid" ? "bg-emerald-500/10 text-emerald-600" : "bg-orange-500/10 text-orange-600"
+                      }`}>
+                        {order.status || "pending"}
+                      </span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold">₹1,499</p>
-                    <span className="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600">Paid</span>
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-10">No orders found yet.</p>
+              )}
             </div>
           </CardContent>
         </Card>
 
         <Card className="premium-card">
           <CardHeader>
-            <CardTitle className="text-lg font-bold font-heading">Top Products</CardTitle>
+            <CardTitle className="text-lg font-bold font-heading">Recent Products</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-muted overflow-hidden">
-                      <img src={`https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100&q=80`} alt="" className="w-full h-full object-cover" />
+              {topProducts.length > 0 ? (
+                topProducts.map((product) => (
+                  <div key={product.id} className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-muted overflow-hidden">
+                        <img 
+                          src={product.image || `https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100&q=80`} 
+                          alt="" 
+                          className="w-full h-full object-cover" 
+                        />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold">{product.title}</p>
+                        <p className="text-xs text-muted-foreground">₹{product.price?.toLocaleString()}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-bold">Premium Cotton T-Shirt</p>
-                      <p className="text-xs text-muted-foreground">32 units sold</p>
-                    </div>
+                    <Link href={`/admin/products/edit/${product.id}`}>
+                      <Button variant="ghost" size="sm" className="text-xs font-bold text-primary">Edit</Link>
+                    </Link>
                   </div>
-                  <p className="text-sm font-bold text-primary">₹24,500</p>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-10">No products listed.</p>
+              )}
             </div>
           </CardContent>
         </Card>
+      </div>
       </div>
     </div>
   );

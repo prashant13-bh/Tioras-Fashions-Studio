@@ -33,8 +33,10 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
-# Old monorepo files (can be deleted)
-apps/
-package-lock.json
-.nvmrc
-.version
+# Backend
+apps/pocketbase/pb_data/
+apps/pocketbase/pocketbase
+apps/pocketbase/pocketbase.exe
+
+# Workspace settings
+.antigravity/

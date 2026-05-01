@@ -19,11 +19,10 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      // Old design studio routes → home
-      { source: '/design-studio', destination: '/', permanent: true },
-      { source: '/ai-designer', destination: '/', permanent: true },
-      { source: '/design-generator', destination: '/', permanent: true },
-      { source: '/customize', destination: '/', permanent: true },
+      // Old design studio routes → home (Except the new /design-studio we just enabled)
+      { source: '/ai-designer', destination: '/', permanent: false },
+      { source: '/design-generator', destination: '/', permanent: false },
+      { source: '/customize', destination: '/', permanent: false },
     ];
   },
 };

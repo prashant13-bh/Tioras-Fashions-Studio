@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import pb from "@/lib/pocketbase";
+import { adminPb } from "@/lib/pocketbase";
 
 const AdminAuthContext = createContext(null);
 
@@ -17,8 +17,8 @@ export const AdminAuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const stored = pb.authStore.model;
-    if (stored && stored.role === "admin") {
+    const stored = adminPb.authStore.model;
+    if (stored && (stored.role === "admin" || stored.isAdmin)) {
       setAdmin(stored);
       setIsAdmin(true);
     }
@@ -26,13 +26,16 @@ export const AdminAuthProvider = ({ children }) => {
 
   const loginAdmin = async (email, password) => {
     try {
-      const authData = await pb
+      const authData = await adminPb
         .collection("users")
         .authWithPassword(email, password);
-      if (authData.record.role !== "admin") {
-        pb.authStore.clear();
-        return { success: false, error: "Not an admin account" };
+      
+      // Allow both 'role === admin' or 'isAdmin === true' for flexibility
+      if (authData.record.role !== "admin" && !authData.record.isAdmin) {
+        adminPb.authStore.clear();
+        return { success: false, error: "Access restricted to administrators" };
       }
+      
       setAdmin(authData.record);
       setIsAdmin(true);
       return { success: true };
@@ -42,7 +45,7 @@ export const AdminAuthProvider = ({ children }) => {
   };
 
   const logoutAdmin = () => {
-    pb.authStore.clear();
+    adminPb.authStore.clear();
     setAdmin(null);
     setIsAdmin(false);
   };

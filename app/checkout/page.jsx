@@ -32,13 +32,43 @@ export default function CheckoutPage() {
   const [processing, setProcessing] = useState(false);
   const [shippingMethod, setShippingMethod] = useState("Standard");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [orderNotes, setOrderNotes] = useState("");
+  const [useShippingForBilling, setUseShippingForBilling] = useState(true);
   const [address, setAddress] = useState({
+    fullName: "", phone: "", street: "", city: "", state: "", zipCode: "", country: "India",
+  });
+  const [billingAddress, setBillingAddress] = useState({
     fullName: "", phone: "", street: "", city: "", state: "", zipCode: "", country: "India",
   });
 
   useEffect(() => {
     if (currentUser) {
-      setAddress((a) => ({ ...a, fullName: currentUser.name || "", }));
+      setAddress((a) => ({ ...a, fullName: currentUser.name || "" }));
+      // Fetch saved addresses
+      const fetchAddresses = async () => {
+        try {
+          const records = await pb.collection("addresses").getList(1, 10, {
+            filter: `user = "${currentUser.id}"`,
+          });
+          setSavedAddresses(records.items);
+          if (records.items.length > 0) {
+            const defaultAddr = records.items.find(a => a.is_default) || records.items[0];
+            setAddress({
+              fullName: defaultAddr.full_name || currentUser.name,
+              phone: defaultAddr.phone || "",
+              street: defaultAddr.street || "",
+              city: defaultAddr.city || "",
+              state: defaultAddr.state || "",
+              zipCode: defaultAddr.zip_code || "",
+              country: defaultAddr.country || "India",
+            });
+          }
+        } catch (err) {
+          console.error("Error fetching addresses:", err);
+        }
+      };
+      fetchAddresses();
     }
   }, [currentUser]);
 
@@ -50,7 +80,6 @@ export default function CheckoutPage() {
     }
   }, [cartItems, router]);
 
-  // FIX: Calculate from cents, not regex-parsed strings (Bug #2)
   const subtotalCents = getCartTotalCents();
   const subtotal = subtotalCents / 100;
   const shippingCost = shippingMethod === "Express" ? 200 : subtotal >= 999 ? 0 : 50;
@@ -60,6 +89,24 @@ export default function CheckoutPage() {
   const handleInput = (e) => {
     const { name, value } = e.target;
     setAddress((a) => ({ ...a, [name]: value }));
+  };
+
+  const handleBillingInput = (e) => {
+    const { name, value } = e.target;
+    setBillingAddress((a) => ({ ...a, [name]: value }));
+  };
+
+  const selectSavedAddress = (addr) => {
+    setAddress({
+      fullName: addr.full_name,
+      phone: addr.phone,
+      street: addr.street,
+      city: addr.city,
+      state: addr.state,
+      zipCode: addr.zip_code,
+      country: addr.country,
+    });
+    toast.success("Address selected");
   };
 
   const razorpayKeyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
@@ -98,7 +145,14 @@ export default function CheckoutPage() {
             image: item.product.image,
             customization: item.product.customization || null,
           })),
-          shippingAddress: address, shippingMethod, shippingCost, subtotal, tax, totalAmount: total,
+          shippingAddress: address, 
+          billingAddress: useShippingForBilling ? address : billingAddress,
+          orderNotes,
+          shippingMethod, 
+          shippingCost, 
+          subtotal, 
+          tax, 
+          totalAmount: total,
         }),
       });
 
@@ -165,7 +219,24 @@ export default function CheckoutPage() {
 
               {/* Shipping */}
               <section className="bg-card p-6 rounded-2xl border border-border/50">
-                <h2 className="text-lg font-bold mb-4 font-display">Shipping Address</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-bold font-display">Shipping Address</h2>
+                  {savedAddresses.length > 0 && (
+                    <div className="flex gap-2 overflow-x-auto pb-2 max-w-[200px] sm:max-w-md no-scrollbar">
+                      {savedAddresses.map((addr) => (
+                        <button
+                          key={addr.id}
+                          type="button"
+                          onClick={() => selectSavedAddress(addr)}
+                          className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold whitespace-nowrap border border-primary/20 hover:bg-primary hover:text-white transition-all"
+                        >
+                          {addr.label || addr.city}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                
                 <div className="grid sm:grid-cols-2 gap-4">
                   {[
                     { id: "fullName", label: "Full Name", span: false },
@@ -176,25 +247,87 @@ export default function CheckoutPage() {
                     { id: "zipCode", label: "Pincode", span: false },
                   ].map((f) => (
                     <div key={f.id} className={`space-y-1 ${f.span ? "sm:col-span-2" : ""}`}>
-                      <Label htmlFor={f.id}>{f.label}</Label>
-                      <Input id={f.id} name={f.id} type={f.type || "text"} required value={address[f.id]} onChange={handleInput} className="bg-background touch-target" />
+                      <Label htmlFor={f.id} className="text-xs font-bold uppercase tracking-wider opacity-60">{f.label}</Label>
+                      <Input id={f.id} name={f.id} type={f.type || "text"} required value={address[f.id]} onChange={handleInput} className="h-12 rounded-xl bg-background/50 border-border/50 focus:border-primary transition-all" />
                     </div>
                   ))}
-                  <div className="space-y-1"><Label>Country</Label><Input value="India" readOnly className="bg-muted" /></div>
+                  <div className="space-y-1">
+                    <Label className="text-xs font-bold uppercase tracking-wider opacity-60">Country</Label>
+                    <Input value="India" readOnly className="h-12 rounded-xl bg-muted/50 border-border/50" />
+                  </div>
+                </div>
+              </section>
+
+              {/* Billing Address Toggle */}
+              <section className="bg-card p-6 rounded-2xl border border-border/50 space-y-4">
+                <div className="flex items-center space-x-3">
+                  <Checkbox 
+                    id="billing_toggle" 
+                    checked={useShippingForBilling} 
+                    onCheckedChange={setUseShippingForBilling} 
+                  />
+                  <Label htmlFor="billing_toggle" className="text-sm font-bold cursor-pointer">
+                    Billing address same as shipping
+                  </Label>
+                </div>
+
+                {!useShippingForBilling && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="pt-4 grid sm:grid-cols-2 gap-4 border-t border-border/50"
+                  >
+                    {[
+                      { id: "fullName", label: "Billing Name", span: false },
+                      { id: "phone", label: "Billing Phone", type: "tel", span: false },
+                      { id: "street", label: "Billing Street", span: true },
+                      { id: "city", label: "City", span: false },
+                      { id: "state", label: "State", span: false },
+                      { id: "zipCode", label: "Pincode", span: false },
+                    ].map((f) => (
+                      <div key={f.id} className={`space-y-1 ${f.span ? "sm:col-span-2" : ""}`}>
+                        <Label htmlFor={`billing_${f.id}`} className="text-xs font-bold uppercase tracking-wider opacity-60">{f.label}</Label>
+                        <Input id={`billing_${f.id}`} name={f.id} type={f.type || "text"} required={!useShippingForBilling} value={billingAddress[f.id]} onChange={handleBillingInput} className="h-12 rounded-xl bg-background/50 border-border/50 focus:border-primary transition-all" />
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </section>
+
+              {/* Order Notes */}
+              <section className="bg-card p-6 rounded-2xl border border-border/50">
+                <h2 className="text-lg font-bold mb-4 font-display">Special Instructions</h2>
+                <div className="space-y-2">
+                  <Label htmlFor="notes" className="text-xs font-bold uppercase tracking-wider opacity-60">Order Notes (Optional)</Label>
+                  <textarea
+                    id="notes"
+                    value={orderNotes}
+                    onChange={(e) => setOrderNotes(e.target.value)}
+                    placeholder="E.g., Special delivery instructions, gift notes, etc."
+                    className="w-full min-h-[100px] p-4 rounded-xl bg-background/50 border border-border/50 focus:border-primary transition-all text-sm resize-none"
+                  />
                 </div>
               </section>
 
               {/* Shipping Method */}
               <section className="bg-card p-6 rounded-2xl border border-border/50">
                 <h2 className="text-lg font-bold mb-4 font-display">Shipping Method</h2>
-                <div className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
-                    { id: "Standard", label: "Standard (5-7 days)", price: subtotal >= 999 ? "FREE" : "₹50" },
-                    { id: "Express", label: "Express (2-3 days)", price: "₹200" },
+                    { id: "Standard", label: "Standard Delivery", desc: "5-7 business days", price: subtotal >= 999 ? "FREE" : "₹50" },
+                    { id: "Express", label: "Express Delivery", desc: "2-3 business days", price: "₹200" },
                   ].map((m) => (
-                    <button key={m.id} type="button" onClick={() => setShippingMethod(m.id)} className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${shippingMethod === m.id ? "border-primary bg-primary/5" : "border-border/50"}`}>
-                      <span className="font-semibold text-sm">{m.label}</span>
-                      <span className="text-sm font-bold">{m.price}</span>
+                    <button 
+                      key={m.id} 
+                      type="button" 
+                      onClick={() => setShippingMethod(m.id)} 
+                      className={`flex flex-col text-left p-4 rounded-2xl border-2 transition-all ${shippingMethod === m.id ? "border-primary bg-primary/5 ring-1 ring-primary" : "border-border/50 hover:bg-muted/50"}`}
+                    >
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="font-bold text-sm uppercase tracking-wider">{m.label}</span>
+                        <span className="text-primary font-black">{m.price}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground">{m.desc}</span>
                     </button>
                   ))}
                 </div>

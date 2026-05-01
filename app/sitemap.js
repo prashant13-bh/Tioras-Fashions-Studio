@@ -6,6 +6,7 @@ export default async function sitemap() {
     '/products',
     '/about',
     '/contact',
+    '/design-studio',
     '/faq',
     '/cart',
     '/login',

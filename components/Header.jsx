@@ -37,8 +37,10 @@ export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -71,7 +73,10 @@ export default function Header() {
         <div className="flex items-center justify-between h-14 md:h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0 group">
-            <span className={`text-2xl md:text-3xl font-black font-heading tracking-tighter transition-colors duration-300 ${scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"}`}>
+            <span className={`text-2xl md:text-3xl font-black font-heading tracking-tighter transition-colors duration-300 ${
+              !mounted ? "text-primary" : 
+              scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"
+            }`}>
               TIORAS<span className="text-accent italic">.</span>
             </span>
           </Link>
@@ -85,7 +90,10 @@ export default function Header() {
                 className={`px-5 py-2 rounded-full text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 ${
                   pathname === link.href
                     ? "text-primary-foreground bg-primary shadow-lg scale-105"
-                    : `hover:text-primary hover:bg-white/10 ${scrolled ? "text-muted-foreground" : "text-muted-foreground md:text-white/70"}`
+                    : `hover:text-primary hover:bg-white/10 ${
+                        !mounted ? "text-muted-foreground" :
+                        scrolled ? "text-muted-foreground" : "text-muted-foreground md:text-white/70"
+                      }`
                 }`}
               >
                 {link.label}
@@ -102,7 +110,10 @@ export default function Header() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setSearchOpen(!searchOpen)}
-                className={`rounded-full transition-colors ${scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"}`}
+                className={`rounded-full transition-colors ${
+                  !mounted ? "text-primary" :
+                  scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"
+                }`}
                 aria-label="Search"
                 >
                 <Search className="h-5 w-5" />
@@ -115,7 +126,10 @@ export default function Header() {
                 <Button
                     variant="ghost"
                     size="icon"
-                    className={`rounded-full relative ${scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"}`}
+                    className={`rounded-full relative ${
+                      !mounted ? "text-primary" :
+                      scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"
+                    }`}
                     aria-label="Wishlist"
                 >
                     <Heart className="h-5 w-5" />
@@ -132,7 +146,10 @@ export default function Header() {
                 <Button
                     variant="ghost"
                     size="icon"
-                    className={`rounded-full relative ${scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"}`}
+                    className={`rounded-full relative ${
+                      !mounted ? "text-primary" :
+                      scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"
+                    }`}
                     aria-label="Cart"
                 >
                     <ShoppingCart className="h-5 w-5" />
@@ -149,7 +166,10 @@ export default function Header() {
                 <Button
                     variant="ghost"
                     size="icon"
-                    className={`rounded-full ${scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"}`}
+                    className={`rounded-full ${
+                      !mounted ? "text-primary" :
+                      scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"
+                    }`}
                     aria-label="Account"
                 >
                     <User className="h-5 w-5" />
@@ -162,7 +182,10 @@ export default function Header() {
               variant="ghost"
               size="icon"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`lg:hidden rounded-full ${scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"}`}
+              className={`lg:hidden rounded-full ${
+                !mounted ? "text-primary" :
+                scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"
+              }`}
               aria-label="Menu"
             >
               {mobileMenuOpen ? (
