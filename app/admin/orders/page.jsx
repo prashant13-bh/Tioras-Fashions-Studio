@@ -143,7 +143,7 @@ export default function AdminOrdersPage() {
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-0 overflow-x-auto custom-scrollbar">
           <Table>
             <TableHeader className="bg-muted/30">
               <TableRow>

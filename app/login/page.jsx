@@ -94,6 +94,8 @@ function LoginContent() {
         </form>
       </motion.div>
     </main>
+  );
+}
 
 export default function LoginPage() {
   return (
