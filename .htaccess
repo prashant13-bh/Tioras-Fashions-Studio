@@ -1,8 +1,12 @@
 # Hostinger Node.js Application Configuration
 RewriteEngine On
 
+# Disable DirectoryIndex to prevent serving old index.html files
+DirectoryIndex disabled
+
 # Redirect all requests to the Node.js application
-RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-f [OR]
+RewriteCond %{REQUEST_URI} ^/index\.html$
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
 

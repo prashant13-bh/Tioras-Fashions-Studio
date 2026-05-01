@@ -162,7 +162,7 @@ export default function HomePage() {
                   exit={{ opacity: 0, y: -30 }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 >
-                  <h1 className="text-5xl sm:text-7xl md:text-9xl font-black mb-6 text-white leading-[0.9] font-heading tracking-tighter">
+                  <h1 className="text-4xl sm:text-7xl md:text-9xl font-black mb-6 text-white leading-[0.9] font-heading tracking-tighter">
                     {heroSlides[heroIndex].title}<br/>
                     <span className="text-accent italic">{heroSlides[heroIndex].accent}</span>
                   </h1>
@@ -233,8 +233,8 @@ export default function HomePage() {
         </section>
 
         {/* ── STATS BAR ── */}
-        <section className="bg-primary text-primary-foreground py-10 relative overflow-hidden">
-            <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 relative z-10">
+        <section className="bg-primary text-primary-foreground py-8 md:py-16 relative overflow-hidden">
+            <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-y-12 gap-x-8 relative z-10">
                 {stats.map((stat, i) => (
                     <div key={i} className="text-center border-r border-white/10 last:border-none">
                         <p className="text-3xl md:text-5xl font-black mb-1 font-heading">{stat.value}</p>
@@ -282,7 +282,7 @@ export default function HomePage() {
                   <Link 
                     key={cat.name} 
                     href={`/products?category=${cat.name.split(' ')[1].toLowerCase()}`} 
-                    className="relative w-[350px] md:w-[500px] aspect-[4/5] overflow-hidden rounded-[3rem] bg-muted shadow-premium transition-all duration-700 hover:scale-[1.03] inline-block"
+                    className="relative w-[280px] sm:w-[350px] md:w-[500px] aspect-[4/5] overflow-hidden rounded-[2rem] md:rounded-[3rem] bg-muted shadow-premium transition-all duration-700 hover:scale-[1.03] inline-block"
                   >
                     <img 
                       src={cat.img} 
@@ -457,11 +457,11 @@ export default function HomePage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="EMAIL ADDRESS"
                 required
-                className="bg-white/5 backdrop-blur-xl border-border/80 text-foreground h-20 rounded-[2rem] px-8 focus-visible:ring-primary shadow-xl text-sm font-black tracking-widest uppercase"
+                className="bg-white/5 backdrop-blur-xl border-border/80 text-foreground h-14 md:h-20 rounded-[1.5rem] md:rounded-[2rem] px-6 md:px-8 focus-visible:ring-primary shadow-xl text-[10px] md:text-sm font-black tracking-widest uppercase"
               />
               <Button
                 type="submit"
-                className="bg-primary text-primary-foreground hover:bg-accent hover:text-accent-foreground h-20 rounded-[2rem] px-12 font-black uppercase tracking-[0.2em] shadow-premium transition-all hover:scale-105"
+                className="bg-primary text-primary-foreground hover:bg-accent hover:text-accent-foreground h-14 md:h-20 rounded-[1.5rem] md:rounded-[2rem] px-12 font-black uppercase tracking-[0.2em] shadow-premium transition-all hover:scale-105"
               >
                 Subscribe
               </Button>
