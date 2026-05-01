@@ -65,7 +65,7 @@ export default function SearchPage() {
       <Header />
       <main className="flex-grow pt-20">
         <Suspense fallback={<div className="pt-40 text-center">Loading search...</div>}>
-          <SearchResults />
+          <SearchContent />
         </Suspense>
       </main>
       <Footer />
