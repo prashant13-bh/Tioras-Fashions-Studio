@@ -1,3 +1,4 @@
+import React from "react";
 import { Outfit, Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
@@ -67,28 +68,58 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
       className={`${outfit.variable} ${jakarta.variable} ${playfair.variable}`}
     >
-      <body className="font-body antialiased pb-20 lg:pb-0">
-        <div className="bg-primary text-primary-foreground py-2 text-center text-xs font-bold tracking-widest uppercase overflow-hidden whitespace-nowrap">
-          <div className="animate-marquee inline-block">
-            <span>✨ 10% OFF ON YOUR FIRST CUSTOM ORDER — USE CODE: FIRST10 ✨ &nbsp;&nbsp;&nbsp;&nbsp; 📦 FREE SHIPPING ON ALL ORDERS ABOVE ₹999 ✨ &nbsp;&nbsp;&nbsp;&nbsp; 🧵 NEW EMBROIDERY OPTIONS AVAILABLE NOW ✨ &nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span>✨ 10% OFF ON YOUR FIRST CUSTOM ORDER — USE CODE: FIRST10 ✨ &nbsp;&nbsp;&nbsp;&nbsp; 📦 FREE SHIPPING ON ALL ORDERS ABOVE ₹999 ✨ &nbsp;&nbsp;&nbsp;&nbsp; 🧵 NEW EMBROIDERY OPTIONS AVAILABLE NOW ✨ &nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <body className="font-body antialiased pb-20 lg:pb-0 overflow-x-hidden">
+        <LoadingManager>
+          <div className="bg-primary text-primary-foreground py-2 text-center text-xs font-bold tracking-widest uppercase overflow-hidden whitespace-nowrap">
+            <div className="animate-marquee inline-block">
+              <span>✨ 10% OFF ON YOUR FIRST CUSTOM ORDER — USE CODE: FIRST10 ✨ &nbsp;&nbsp;&nbsp;&nbsp; 📦 FREE SHIPPING ON ALL ORDERS ABOVE ₹999 ✨ &nbsp;&nbsp;&nbsp;&nbsp; 🧵 NEW EMBROIDERY OPTIONS AVAILABLE NOW ✨ &nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <span>✨ 10% OFF ON YOUR FIRST CUSTOM ORDER — USE CODE: FIRST10 ✨ &nbsp;&nbsp;&nbsp;&nbsp; 📦 FREE SHIPPING ON ALL ORDERS ABOVE ₹999 ✨ &nbsp;&nbsp;&nbsp;&nbsp; 🧵 NEW EMBROIDERY OPTIONS AVAILABLE NOW ✨ &nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </div>
           </div>
-        </div>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <AuthProvider>
-            <AdminAuthProvider>
-              <WishlistProvider>
-                <CartProvider>
-                  {children}
-                  <BottomNav />
-                  <NewsletterPopup />
-                  <Toaster richColors position="top-right" />
-                </CartProvider>
-              </WishlistProvider>
-            </AdminAuthProvider>
-          </AuthProvider>
-        </ThemeProvider>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+            <AuthProvider>
+              <AdminAuthProvider>
+                <WishlistProvider>
+                  <CartProvider>
+                    {children}
+                    <BottomNav />
+                    <NewsletterPopup />
+                    <Toaster richColors position="top-right" />
+                  </CartProvider>
+                </WishlistProvider>
+              </AdminAuthProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </LoadingManager>
       </body>
     </html>
+  );
+}
+
+function LoadingManager({ children }) {
+  const [mounted, setMounted] = React.useState(false);
+  
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return (
+    <>
+      <div 
+        className={`fixed inset-0 z-[9999] bg-background flex flex-col items-center justify-center transition-all duration-700 pointer-events-none ${
+          mounted ? "opacity-0 invisible" : "opacity-100 visible"
+        }`}
+      >
+        <div className="flex flex-col items-center gap-6 animate-pulse">
+           <span className="text-4xl font-black tracking-tighter text-primary font-heading">
+             TIORAS<span className="text-accent italic">.</span>
+           </span>
+           <div className="w-12 h-[2px] bg-accent/30 overflow-hidden">
+              <div className="w-full h-full bg-accent animate-progress" />
+           </div>
+        </div>
+      </div>
+      {children}
+    </>
   );
 }

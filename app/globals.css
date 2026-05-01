@@ -176,6 +176,11 @@
 .animate-slide-up {
   animation: slide-up 0.6s ease-out forwards;
 }
+@keyframes progress {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -189,4 +194,8 @@
 
 .animate-marquee:hover {
   animation-play-state: paused;
+}
+
+.animate-progress {
+  animation: progress 1.5s infinite ease-in-out;
 }

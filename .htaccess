@@ -1,0 +1,19 @@
+# Hostinger Node.js Application Configuration
+RewriteEngine On
+
+# Redirect all requests to the Node.js application
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
+
+# Prevent caching of the main entry point to avoid "old landing page" issues
+<FilesMatch "\.(html|php|js)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+</FilesMatch>
+
+# Allow caching of static assets with unique hashes
+<FilesMatch "\.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
