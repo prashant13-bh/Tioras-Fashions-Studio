@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -14,6 +14,8 @@ import {
   Flame,
   Mail,
   Upload,
+  ChevronRight,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -27,41 +29,48 @@ import ProductCard from "@/components/ProductCard";
 
 const heroSlides = [
   {
-    image:
-      "https://images.unsplash.com/photo-1511511450040-677116ff389e?auto=format&fit=crop&q=80&w=2070",
-    title: "TioraS Fashions Studio",
-    subtitle: "Premium Custom Embroidery & Printing — Your Design, Your Style.",
+    image: "https://images.unsplash.com/photo-1511511450040-677116ff389e?auto=format&fit=crop&q=80&w=2070",
+    title: "Defining Modern",
+    accent: "Luxury.",
+    subtitle: "Premium Custom Embroidery & Printing Studio. Your Design, Masterfully Crafted.",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1490578474895-699bc4e35154?auto=format&fit=crop&q=80&w=2071",
-    title: "Upload. Customize. Wear.",
-    subtitle: "Upload your design and we'll print or embroider it on premium apparel.",
+    image: "https://images.unsplash.com/photo-1490578474895-699bc4e35154?auto=format&fit=crop&q=80&w=2071",
+    title: "Wear Your",
+    accent: "Identity.",
+    subtitle: "Upload your vision. We deliver precision on world-class fabrics.",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&q=80&w=2070",
-    title: "Crafted With Precision.",
-    subtitle: "From custom T-shirts to embroidered hoodies — quality you can feel.",
+    image: "https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&q=80&w=2070",
+    title: "Crafted for the",
+    accent: "Bold.",
+    subtitle: "Sophisticated embroidery and high-definition prints for those who lead.",
   },
 ];
 
 const testimonials = [
   {
     name: "Arjun M.",
-    text: "The embroidery quality is amazing. My company logos look incredibly professional on the polo shirts.",
-    role: "Business Owner",
+    text: "The embroidery quality is exceptional. It's rare to find this level of precision and premium fabric quality online.",
+    role: "Studio Director",
   },
   {
     name: "Priya S.",
-    text: "Uploaded my artwork and got a perfectly printed hoodie in just 5 days. Will order again!",
-    role: "Verified Buyer",
+    text: "TioraS transformed my digital art into a wearable masterpiece. The service is as premium as the products.",
+    role: "Verified Curator",
   },
   {
     name: "Rahul D.",
-    text: "Best custom printing service in Karnataka. Premium fabric and the colors are vibrant.",
-    role: "Repeat Customer",
+    text: "The only place for custom apparel that actually feels like high fashion. Highly recommended.",
+    role: "Loyal Client",
   },
+];
+
+const stats = [
+  { label: "Happy Clients", value: "10K+" },
+  { label: "Designs Crafted", value: "25K+" },
+  { label: "Quality Checks", value: "100%" },
+  { label: "Global Reach", value: "24/7" },
 ];
 
 export default function HomePage() {
@@ -72,18 +81,12 @@ export default function HomePage() {
   const [testimonialIndex, setTestimonialIndex] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(
-      () => setHeroIndex((i) => (i + 1) % heroSlides.length),
-      5000
-    );
+    const timer = setInterval(() => setHeroIndex((i) => (i + 1) % heroSlides.length), 6000);
     return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(
-      () => setTestimonialIndex((i) => (i + 1) % testimonials.length),
-      5000
-    );
+    const timer = setInterval(() => setTestimonialIndex((i) => (i + 1) % testimonials.length), 5000);
     return () => clearInterval(timer);
   }, []);
 
@@ -104,16 +107,15 @@ export default function HomePage() {
   const handleNewsletter = (e) => {
     e.preventDefault();
     if (email) {
-      // TODO: Save to PocketBase newsletter collection
-      toast.success("Welcome! You'll receive our latest updates.");
+      toast.success("Welcome to the inner circle. Stay inspired.");
       setEmail("");
     }
   };
 
   const ProductSkeletons = () => (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
       {[1, 2, 3, 4].map((i) => (
-        <Skeleton key={i} className="aspect-[3/4] rounded-2xl" />
+        <Skeleton key={i} className="aspect-[4/5] rounded-[2rem]" />
       ))}
     </div>
   );
@@ -122,49 +124,49 @@ export default function HomePage() {
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
-      <main className="flex-grow pt-16 md:pt-20">
+      <main className="flex-grow">
         {/* ── HERO ── */}
-        <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-secondary">
+        <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div
               key={heroIndex}
-              initial={{ opacity: 0, scale: 1.05 }}
+              initial={{ opacity: 0, scale: 1.1 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 1.2 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
               className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-              style={{
-                backgroundImage: `url(${heroSlides[heroIndex].image})`,
-              }}
+              style={{ backgroundImage: `url(${heroSlides[heroIndex].image})` }}
             />
           </AnimatePresence>
-          <div className="absolute inset-0 bg-gradient-to-r from-secondary/95 via-secondary/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent hidden md:block" />
 
-          <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-            <div className="max-w-2xl">
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-20">
+            <div className="max-w-3xl">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 bg-accent/20 backdrop-blur-md border border-accent/30 rounded-full px-4 py-1.5 mb-6"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full px-5 py-2 mb-8"
               >
-                <Upload className="w-4 h-4 text-accent" />
-                <span className="text-sm font-bold text-white tracking-wide uppercase">
-                  Upload Your Design Today
+                <Sparkles className="w-4 h-4 text-accent animate-pulse" />
+                <span className="text-xs font-black text-white tracking-[0.2em] uppercase">
+                  Est. 2024 • Karnataka, India
                 </span>
               </motion.div>
 
               <AnimatePresence mode="wait">
                 <motion.div
                   key={heroIndex}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.6 }}
+                  exit={{ opacity: 0, y: -30 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
                 >
-                  <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold mb-4 text-white leading-[1.1] font-heading">
-                    {heroSlides[heroIndex].title}
+                  <h1 className="text-5xl sm:text-7xl md:text-9xl font-black mb-6 text-white leading-[0.9] font-heading tracking-tighter">
+                    {heroSlides[heroIndex].title}<br/>
+                    <span className="text-accent italic">{heroSlides[heroIndex].accent}</span>
                   </h1>
-                  <p className="text-lg sm:text-2xl mb-10 text-white/80 leading-relaxed max-w-xl font-medium">
+                  <p className="text-lg sm:text-xl md:text-2xl mb-12 text-white/80 leading-relaxed max-w-xl font-medium tracking-wide">
                     {heroSlides[heroIndex].subtitle}
                   </p>
                 </motion.div>
@@ -173,103 +175,124 @@ export default function HomePage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="flex flex-col sm:flex-row gap-4"
+                transition={{ delay: 0.5 }}
+                className="flex flex-col sm:flex-row gap-5"
               >
                 <Link href="/products">
                   <Button
                     size="lg"
-                    className="w-full sm:w-auto gradient-primary text-white font-bold px-8 h-14 text-lg rounded-xl shadow-lg touch-target"
+                    className="w-full sm:w-auto bg-white text-primary hover:bg-accent hover:text-accent-foreground font-black px-10 h-16 text-sm uppercase tracking-widest rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95"
                   >
-                    Shop Collection
+                    Enter Collections
                   </Button>
                 </Link>
-                <Link href="/about">
+                <Link href="/contact">
                   <Button
                     size="lg"
                     variant="outline"
-                    className="w-full sm:w-auto border-white/30 text-white hover:bg-white hover:text-secondary px-8 h-14 text-lg rounded-xl bg-white/5 backdrop-blur-sm touch-target"
+                    className="w-full sm:w-auto border-white/20 text-white hover:bg-white/10 px-10 h-16 text-sm uppercase tracking-widest rounded-full backdrop-blur-xl transition-all"
                   >
-                    Learn More
+                    Custom Studio
                   </Button>
                 </Link>
               </motion.div>
             </div>
-
-            <div className="absolute bottom-8 left-4 sm:left-6 lg:left-8 flex gap-2 z-20">
-              {heroSlides.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setHeroIndex(idx)}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
-                    idx === heroIndex
-                      ? "w-8 bg-primary"
-                      : "w-4 bg-white/30 hover:bg-white/50"
-                  }`}
-                  aria-label={`Go to slide ${idx + 1}`}
-                />
-              ))}
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1, duration: 1 }}
-              className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:block"
-            >
-              <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-1">
-                <motion.div
-                  animate={{ y: [0, 12, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                  className="w-1 h-2 bg-white rounded-full"
-                />
-              </div>
-            </motion.div>
           </div>
+
+          {/* Hero Navigation Indicators */}
+          <div className="absolute bottom-12 right-12 flex flex-col gap-4 z-20">
+            {heroSlides.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setHeroIndex(idx)}
+                className="group flex items-center gap-4 text-right"
+                aria-label={`Slide ${idx + 1}`}
+              >
+                <span className={`text-[10px] font-black uppercase tracking-widest transition-all ${idx === heroIndex ? "text-accent" : "text-white/30 group-hover:text-white/60"}`}>
+                  0{idx + 1}
+                </span>
+                <div className={`h-[2px] transition-all duration-500 ${idx === heroIndex ? "w-12 bg-accent" : "w-4 bg-white/20 group-hover:w-8 group-hover:bg-white/40"}`} />
+              </button>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 1 }}
+            className="absolute bottom-12 left-12 hidden md:block"
+          >
+            <div className="w-1 h-24 bg-white/10 rounded-full overflow-hidden">
+                <motion.div 
+                    animate={{ y: [0, 96] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    className="w-full h-1/2 bg-accent rounded-full"
+                />
+            </div>
+          </motion.div>
         </section>
 
-        {/* ── CATEGORIES (Auto-Sliding Carousel) ── */}
-        <section className="py-24 bg-background overflow-hidden relative">
-          <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-background to-transparent z-10" />
-          <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-background to-transparent z-10" />
-          
-          <div className="max-w-7xl mx-auto px-4 mb-16 relative z-20">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center"
-            >
-              <h2 className="text-3xl md:text-6xl font-extrabold mb-4 font-heading tracking-tight italic">Explore Collections</h2>
-              <p className="text-muted-foreground text-lg max-w-xl mx-auto">Discover premium apparel designed for customization and style.</p>
-            </motion.div>
+        {/* ── STATS BAR ── */}
+        <section className="bg-primary text-primary-foreground py-10 relative overflow-hidden">
+            <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 relative z-10">
+                {stats.map((stat, i) => (
+                    <div key={i} className="text-center border-r border-white/10 last:border-none">
+                        <p className="text-3xl md:text-5xl font-black mb-1 font-heading">{stat.value}</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60">{stat.label}</p>
+                    </div>
+                ))}
+            </div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl -mr-32 -mt-32" />
+        </section>
+
+        {/* ── RUNWAY CATEGORIES ── */}
+        <section className="py-32 bg-background overflow-hidden">
+          <div className="max-w-7xl mx-auto px-6 mb-24">
+            <div className="flex flex-col md:flex-row items-end justify-between gap-6">
+                <motion.div 
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="max-w-2xl"
+                >
+                    <p className="text-accent font-black uppercase tracking-[0.4em] mb-4 text-xs">Curated Selections</p>
+                    <h2 className="text-5xl md:text-7xl font-black mb-4 font-heading tracking-tighter leading-none">
+                        The Runway <br/><span className="text-muted-foreground italic">Experience.</span>
+                    </h2>
+                </motion.div>
+                <Link href="/products">
+                    <Button variant="link" className="text-primary font-black uppercase tracking-widest p-0 group">
+                        Discover More <ChevronRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
+                    </Button>
+                </Link>
+            </div>
           </div>
           
-          <div className="flex gap-6 animate-marquee whitespace-nowrap group">
+          <div className="flex gap-10 animate-marquee whitespace-nowrap group">
             {[...Array(2)].map((_, i) => (
-              <div key={i} className="flex gap-6">
+              <div key={i} className="flex gap-10">
                 {[
-                  { name: "T-Shirts", img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&q=80&w=800", count: "120+ Items" },
-                  { name: "Hoodies", img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=800", count: "85+ Items" },
-                  { name: "Caps", img: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80&w=800", count: "40+ Items" },
-                  { name: "Sweatshirts", img: "https://images.unsplash.com/photo-1529139513075-03019828b174?auto=format&fit=crop&q=80&w=800", count: "60+ Items" },
-                  { name: "Jackets", img: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&q=80&w=800", count: "30+ Items" },
-                  { name: "Activewear", img: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800", count: "50+ Items" },
+                  { name: "Signature Tees", img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&q=80&w=800", count: "Luxury Finish" },
+                  { name: "Urban Hoodies", img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=800", count: "Heavyweight" },
+                  { name: "Custom Caps", img: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80&w=800", count: "3D Embroidery" },
+                  { name: "Classic Sweats", img: "https://images.unsplash.com/photo-1529139513075-03019828b174?auto=format&fit=crop&q=80&w=800", count: "Premium Fleece" },
+                  { name: "Elite Jackets", img: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&q=80&w=800", count: "Bespoke" },
+                  { name: "Motion Active", img: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800", count: "Performance" },
                 ].map((cat) => (
                   <Link 
                     key={cat.name} 
-                    href={`/products?category=${cat.name.toLowerCase()}`} 
-                    className="relative w-[300px] md:w-[400px] aspect-[16/10] overflow-hidden rounded-[2rem] bg-muted shadow-lg transition-all duration-500 hover:scale-[1.02] inline-block"
+                    href={`/products?category=${cat.name.split(' ')[1].toLowerCase()}`} 
+                    className="relative w-[350px] md:w-[500px] aspect-[4/5] overflow-hidden rounded-[3rem] bg-muted shadow-premium transition-all duration-700 hover:scale-[1.03] inline-block"
                   >
                     <img 
                       src={cat.img} 
                       alt={cat.name} 
-                      className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                    <div className="absolute bottom-8 left-8 text-white text-left">
-                      <p className="text-xs font-black uppercase tracking-[0.2em] text-accent mb-2">{cat.count}</p>
-                      <h3 className="text-2xl md:text-3xl font-extrabold font-heading tracking-tight">{cat.name}</h3>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                    <div className="absolute bottom-12 left-12 text-white text-left">
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3">{cat.count}</p>
+                      <h3 className="text-3xl md:text-4xl font-black font-heading tracking-tight uppercase leading-none">{cat.name}</h3>
                     </div>
                   </Link>
                 ))}
@@ -278,24 +301,21 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── FEATURED PRODUCTS ── */}
-        <section className="py-20 bg-background">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-6 border-b border-border/50 pb-6">
+        {/* ── CURATED SHOP ── */}
+        <section className="py-32 bg-background relative">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
               <div>
-                <h2 className="text-3xl md:text-4xl font-extrabold mb-2 text-foreground flex items-center gap-3 font-heading">
-                  Featured Products <Flame className="w-8 h-8 text-accent" />
+                <p className="text-accent font-black uppercase tracking-[0.4em] mb-4 text-xs">Summer Edition</p>
+                <h2 className="text-4xl md:text-6xl font-black text-foreground font-heading tracking-tighter leading-none">
+                  Season Essentials.
                 </h2>
-                <p className="text-muted-foreground text-lg">
-                  Premium apparel ready for your custom designs.
-                </p>
               </div>
-              <Link href="/products" className="hidden md:block shrink-0">
+              <Link href="/products" className="shrink-0">
                 <Button
-                  variant="ghost"
-                  className="hover:bg-muted rounded-xl font-bold px-6 touch-target text-primary"
+                  className="bg-primary text-primary-foreground hover:bg-accent hover:text-accent-foreground font-black px-8 h-14 text-xs uppercase tracking-widest rounded-full shadow-xl transition-all"
                 >
-                  View All <ArrowRight className="w-4 h-4 ml-2" />
+                  Explore All <ArrowRight className="w-4 h-4 ml-3" />
                 </Button>
               </Link>
             </div>
@@ -311,18 +331,16 @@ export default function HomePage() {
                   hidden: { opacity: 0 },
                   visible: {
                     opacity: 1,
-                    transition: {
-                      staggerChildren: 0.1
-                    }
+                    transition: { staggerChildren: 0.1 }
                   }
                 }}
-                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+                className="grid grid-cols-2 md:grid-cols-4 gap-8"
               >
                 {products.slice(0, 8).map((product, i) => (
                   <motion.div
                     key={product.id}
                     variants={{
-                      hidden: { opacity: 0, y: 20 },
+                      hidden: { opacity: 0, y: 30 },
                       visible: { opacity: 1, y: 0 }
                     }}
                   >
@@ -331,230 +349,127 @@ export default function HomePage() {
                 ))}
               </motion.div>
             )}
-
-            <div className="md:hidden text-center mt-8">
-              <Link href="/products">
-                <Button className="gradient-primary text-white rounded-xl px-8 h-12 font-bold">
-                  View All Products
-                </Button>
-              </Link>
-            </div>
           </div>
         </section>
 
-        {/* ── HOW IT WORKS ── */}
-        <section className="py-24 bg-muted/30 border-y border-border/50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-foreground font-heading">
-                How It Works
-              </h2>
-              <p className="text-muted-foreground text-lg">
-                Get your custom apparel in 3 simple steps.
-              </p>
+        {/* ── THE CRAFT ── */}
+        <section className="py-32 bg-secondary text-white relative overflow-hidden">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-5 pointer-events-none">
+                <h2 className="text-[20vw] font-black uppercase tracking-tighter whitespace-nowrap select-none">TIORAS STUDIO</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                {
-                  step: "1",
-                  title: "Choose Your Product",
-                  desc: "Browse our collection of premium T-shirts, hoodies, caps, and more.",
-                  icon: "🛍️",
-                },
-                {
-                  step: "2",
-                  title: "Upload Your Design",
-                  desc: "Upload your logo, artwork, or image. Choose print or embroidery.",
-                  icon: "📤",
-                },
-                {
-                  step: "3",
-                  title: "We Deliver",
-                  desc: "We craft your custom piece and ship it to your doorstep.",
-                  icon: "🚚",
-                },
-              ].map((item) => (
+          <div className="max-w-7xl mx-auto px-6 relative z-10">
+            <div className="grid lg:grid-cols-2 gap-20 items-center">
                 <motion.div
-                  key={item.step}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="text-center p-8 rounded-3xl bg-background border border-border/50 shadow-subtle"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    className="relative"
                 >
-                  <div className="text-5xl mb-6">{item.icon}</div>
-                  <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center mx-auto mb-4 text-lg">
-                    {item.step}
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 font-heading">
-                    {item.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {item.desc}
-                  </p>
+                    <div className="relative z-10 rounded-[3rem] overflow-hidden shadow-premium">
+                        <img 
+                            src="https://images.unsplash.com/photo-1590736704728-f4730bb3c3af?auto=format&fit=crop&q=80&w=1000" 
+                            alt="Embroidery Process" 
+                            className="w-full h-[600px] object-cover"
+                        />
+                    </div>
+                    <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-accent/30 rounded-[2rem] -z-10 blur-2xl" />
+                    <div className="absolute -top-10 -left-10 w-32 h-32 border-l-4 border-t-4 border-accent -z-10" />
                 </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
 
-        {/* ── WHY CHOOSE US ── */}
-        <section className="py-24 bg-secondary text-secondary-foreground">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl md:text-5xl font-extrabold mb-6 font-heading">
-                Why TioraS Fashions?
-              </h2>
-              <p className="text-secondary-foreground/80 text-lg">
-                Quality craftsmanship meets modern technology.
-              </p>
-            </div>
+                <div>
+                    <p className="text-accent font-black uppercase tracking-[0.4em] mb-6 text-xs">Our Expertise</p>
+                    <h2 className="text-5xl md:text-7xl font-black mb-8 font-heading tracking-tighter leading-[0.9]">
+                        Precision in <br/>Every <span className="text-accent italic">Stitch.</span>
+                    </h2>
+                    <p className="text-xl text-white/70 mb-12 leading-relaxed">
+                        We blend traditional embroidery craftsmanship with modern high-definition printing technology. Every design is treated as a unique piece of art, ensuring durability and vibrant aesthetic appeal.
+                    </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 bg-secondary-foreground/5 rounded-3xl p-8 md:p-12 border border-secondary-foreground/10 hover:bg-secondary-foreground/10 transition-colors">
-                <div className="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center mb-8">
-                  <ShieldCheck className="w-8 h-8 text-primary" />
+                    <div className="space-y-8">
+                        {[
+                            { title: "Museum-Grade Inks", desc: "Eco-friendly, vibrant, and incredibly durable." },
+                            { title: "Bespoke Threadwork", desc: "Dense, 3D embroidery with premium silk threads." },
+                            { title: "Master Inspection", desc: "Triple-check quality process before packaging." }
+                        ].map((item, idx) => (
+                            <div key={idx} className="flex gap-6">
+                                <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center shrink-0">
+                                    <ShieldCheck className="w-6 h-6 text-accent" />
+                                </div>
+                                <div>
+                                    <h4 className="text-lg font-bold mb-1 uppercase tracking-wider">{item.title}</h4>
+                                    <p className="text-white/50 text-sm">{item.desc}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                <h3 className="text-2xl font-bold mb-4 font-heading">
-                  Premium Quality Guaranteed
-                </h3>
-                <p className="text-secondary-foreground/70 text-lg max-w-md leading-relaxed">
-                  We use only premium fabrics and professional-grade printing &
-                  embroidery equipment. Every piece passes quality inspection.
-                </p>
-              </div>
-
-              <div className="bg-secondary-foreground/5 rounded-3xl p-8 border border-secondary-foreground/10 hover:bg-secondary-foreground/10 transition-colors">
-                <div className="w-14 h-14 bg-accent/20 rounded-2xl flex items-center justify-center mb-6">
-                  <Zap className="w-7 h-7 text-accent" />
-                </div>
-                <h3 className="text-xl font-bold mb-3 font-heading">
-                  Fast Turnaround
-                </h3>
-                <p className="text-secondary-foreground/70 leading-relaxed">
-                  Most orders ship within 3-5 business days. Express options available.
-                </p>
-              </div>
-
-              <div className="bg-secondary-foreground/5 rounded-3xl p-8 border border-secondary-foreground/10 hover:bg-secondary-foreground/10 transition-colors">
-                <div className="w-14 h-14 bg-primary/20 rounded-2xl flex items-center justify-center mb-6">
-                  <Truck className="w-7 h-7 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold mb-3 font-heading">
-                  Free Shipping
-                </h3>
-                <p className="text-secondary-foreground/70 leading-relaxed">
-                  Free delivery across India on orders above ₹999. Track your order in real-time.
-                </p>
-              </div>
-
-              <div className="lg:col-span-2 bg-secondary-foreground/5 rounded-3xl p-8 border border-secondary-foreground/10 hover:bg-secondary-foreground/10 transition-colors">
-                <div className="w-14 h-14 bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-6">
-                  <RefreshCw className="w-7 h-7 text-emerald-400" />
-                </div>
-                <h3 className="text-xl font-bold mb-3 font-heading">
-                  Easy Returns
-                </h3>
-                <p className="text-secondary-foreground/70 leading-relaxed">
-                  Not satisfied? We offer hassle-free 7-day returns for unworn items in original condition.
-                </p>
-              </div>
             </div>
           </div>
         </section>
 
         {/* ── TESTIMONIALS ── */}
-        <section className="py-24 bg-background">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-16 text-foreground font-heading">
-              What Our Customers Say
-            </h2>
+        <section className="py-32 bg-background border-b border-border/40">
+          <div className="max-w-5xl mx-auto px-6 text-center">
+            <p className="text-accent font-black uppercase tracking-[0.4em] mb-12 text-xs">Trusted by thousands</p>
 
-            <div className="relative h-[250px] flex items-center justify-center">
+            <div className="relative min-h-[300px] flex items-center justify-center">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={testimonialIndex}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -50 }}
-                  transition={{ duration: 0.5 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.6 }}
                   className="absolute inset-0 flex flex-col items-center justify-center"
                 >
-                  <Quote className="w-12 h-12 text-primary/20 mb-6" />
-                  <div className="flex items-center gap-1 mb-6">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-5 h-5 fill-primary text-primary"
-                      />
-                    ))}
-                  </div>
-                  <p className="text-xl md:text-2xl text-foreground font-medium mb-8 leading-relaxed px-4">
+                  <Quote className="w-16 h-16 text-primary/10 mb-10" />
+                  <p className="text-2xl md:text-4xl text-foreground font-black mb-12 leading-tight tracking-tighter italic">
                     &ldquo;{testimonials[testimonialIndex].text}&rdquo;
                   </p>
-                  <div className="flex items-center gap-3">
-                    <p className="font-extrabold text-foreground">
+                  <div className="flex flex-col items-center">
+                    <p className="font-black text-xl text-foreground uppercase tracking-widest mb-1">
                       {testimonials[testimonialIndex].name}
                     </p>
-                    <span className="w-1.5 h-1.5 rounded-full bg-border" />
-                    <p className="text-sm font-bold text-primary uppercase tracking-wider">
+                    <p className="text-[10px] font-black text-accent uppercase tracking-[0.3em]">
                       {testimonials[testimonialIndex].role}
                     </p>
                   </div>
                 </motion.div>
               </AnimatePresence>
             </div>
-
-            <div className="flex justify-center gap-2 mt-8">
-              {testimonials.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setTestimonialIndex(idx)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    idx === testimonialIndex
-                      ? "w-8 bg-primary"
-                      : "w-2 bg-border hover:bg-primary/50"
-                  }`}
-                  aria-label={`View testimonial ${idx + 1}`}
-                />
-              ))}
-            </div>
           </div>
         </section>
 
         {/* ── NEWSLETTER ── */}
-        <section className="py-24 bg-gradient-to-b from-muted/50 to-muted/10">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8">
-              <Mail className="w-10 h-10 text-primary" />
-            </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold mb-6 text-foreground font-heading">
-              Stay Updated
+        <section className="py-40 bg-background relative overflow-hidden">
+          <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <h2 className="text-5xl md:text-8xl font-black mb-8 text-foreground font-heading tracking-tighter leading-none">
+                Join the <br/><span className="text-accent">Studio.</span>
             </h2>
-            <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto">
-              Get exclusive offers, new product launches, and custom design
-              inspiration delivered to your inbox.
+            <p className="text-muted-foreground text-xl mb-16 max-w-xl mx-auto leading-relaxed">
+              Unlock exclusive collections, bespoke inspiration, and secret studio access. 
             </p>
-            <form
-              onSubmit={handleNewsletter}
-              className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto"
-            >
+            <form onSubmit={handleNewsletter} className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
               <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address"
+                placeholder="EMAIL ADDRESS"
                 required
-                className="bg-background border-border/80 text-foreground h-14 rounded-xl px-6 focus-visible:ring-primary shadow-sm text-base"
+                className="bg-white/5 backdrop-blur-xl border-border/80 text-foreground h-20 rounded-[2rem] px-8 focus-visible:ring-primary shadow-xl text-sm font-black tracking-widest uppercase"
               />
               <Button
                 type="submit"
-                className="gradient-primary text-white h-14 rounded-xl px-8 font-bold shrink-0 touch-target shadow-md"
+                className="bg-primary text-primary-foreground hover:bg-accent hover:text-accent-foreground h-20 rounded-[2rem] px-12 font-black uppercase tracking-[0.2em] shadow-premium transition-all hover:scale-105"
               >
                 Subscribe
               </Button>
             </form>
           </div>
+          
+          <div className="absolute top-1/2 left-0 w-64 h-64 bg-accent/10 rounded-full blur-[120px] -translate-y-1/2 -ml-32" />
+          <div className="absolute top-1/2 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[120px] -translate-y-1/2 -mr-32" />
         </section>
       </main>
 

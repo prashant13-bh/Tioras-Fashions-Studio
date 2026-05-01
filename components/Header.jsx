@@ -21,11 +21,10 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { ThemeToggle } from "./ThemeToggle";
 
 const navLinks = [
-  { href: "/products", label: "Shop" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-  { href: "/blog", label: "Blog" },
-  { href: "/faq", label: "FAQ" },
+  { href: "/products", label: "Collections" },
+  { href: "/about", label: "Our Story" },
+  { href: "/contact", label: "Studio" },
+  { href: "/blog", label: "Insights" },
 ];
 
 export default function Header() {
@@ -62,31 +61,31 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-background/95 backdrop-blur-md shadow-sm border-b border-border/50"
-          : "bg-background/80 backdrop-blur-sm"
+          ? "bg-background/80 backdrop-blur-xl shadow-premium border-b border-white/10 py-2"
+          : "bg-transparent py-4 md:py-6"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-14 md:h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <span className="text-xl md:text-2xl font-extrabold text-primary font-heading tracking-tight">
-              TioraS<span className="text-accent">.</span>
+          <Link href="/" className="flex items-center gap-2 shrink-0 group">
+            <span className={`text-2xl md:text-3xl font-black font-heading tracking-tighter transition-colors duration-300 ${scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"}`}>
+              TIORAS<span className="text-accent italic">.</span>
             </span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-2 bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-2 py-1 shadow-inner">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                className={`px-5 py-2 rounded-full text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 ${
                   pathname === link.href
-                    ? "text-primary bg-primary/5"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    ? "text-primary-foreground bg-primary shadow-lg scale-105"
+                    : `hover:text-primary hover:bg-white/10 ${scrolled ? "text-muted-foreground" : "text-muted-foreground md:text-white/70"}`
                 }`}
               >
                 {link.label}
@@ -95,79 +94,81 @@ export default function Header() {
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center gap-1 md:gap-2">
-            {/* Theme Toggle */}
-            <ThemeToggle />
-
-            {/* Search */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setSearchOpen(!searchOpen)}
-              className="touch-target rounded-full"
-              aria-label="Search"
-            >
-              <Search className="h-5 w-5" />
-            </Button>
-
-            {/* Wishlist */}
-            <Link href="/account/wishlist">
-              <Button
+          <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2">
+                <ThemeToggle />
+                
+                <Button
                 variant="ghost"
                 size="icon"
-                className="touch-target rounded-full relative"
-                aria-label="Wishlist"
-              >
-                <Heart className="h-5 w-5" />
-                {wishlistCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-destructive text-white text-xs rounded-full flex items-center justify-center font-bold">
-                    {wishlistCount}
-                  </span>
-                )}
-              </Button>
-            </Link>
+                onClick={() => setSearchOpen(!searchOpen)}
+                className={`rounded-full transition-colors ${scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"}`}
+                aria-label="Search"
+                >
+                <Search className="h-5 w-5" />
+                </Button>
+            </div>
 
-            {/* Cart */}
-            <Link href="/cart">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="touch-target rounded-full relative"
-                aria-label="Cart"
-              >
-                <ShoppingCart className="h-5 w-5" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center font-bold">
-                    {cartCount}
-                  </span>
-                )}
-              </Button>
-            </Link>
+            <div className="flex items-center gap-1 bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-2 py-1 shadow-inner">
+                {/* Wishlist */}
+                <Link href="/account/wishlist">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`rounded-full relative ${scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"}`}
+                    aria-label="Wishlist"
+                >
+                    <Heart className="h-5 w-5" />
+                    {wishlistCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 text-white text-[10px] rounded-full flex items-center justify-center font-black animate-pulse">
+                        {wishlistCount}
+                    </span>
+                    )}
+                </Button>
+                </Link>
 
-            {/* Account */}
-            <Link href={isAuthenticated ? "/account" : "/login"}>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="touch-target rounded-full"
-                aria-label="Account"
-              >
-                <User className="h-5 w-5" />
-              </Button>
-            </Link>
+                {/* Cart */}
+                <Link href="/cart">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`rounded-full relative ${scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"}`}
+                    aria-label="Cart"
+                >
+                    <ShoppingCart className="h-5 w-5" />
+                    {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-accent-foreground text-[10px] rounded-full flex items-center justify-center font-black animate-pulse">
+                        {cartCount}
+                    </span>
+                    )}
+                </Button>
+                </Link>
+
+                {/* Account */}
+                <Link href={isAuthenticated ? "/account" : "/login"}>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`rounded-full ${scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"}`}
+                    aria-label="Account"
+                >
+                    <User className="h-5 w-5" />
+                </Button>
+                </Link>
+            </div>
 
             {/* Mobile Menu Toggle */}
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden touch-target rounded-full"
+              className={`lg:hidden rounded-full ${scrolled ? "text-primary" : "text-primary md:text-white dark:text-white"}`}
               aria-label="Menu"
             >
               {mobileMenuOpen ? (
-                <X className="h-5 w-5" />
+                <X className="h-6 w-6" />
               ) : (
-                <Menu className="h-5 w-5" />
+                <Menu className="h-6 w-6" />
               )}
             </Button>
           </div>
@@ -180,23 +181,23 @@ export default function Header() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden border-t border-border/50"
+              className="overflow-hidden"
             >
-              <form onSubmit={handleSearch} className="py-4">
-                <div className="flex gap-2">
+              <form onSubmit={handleSearch} className="py-6">
+                <div className="flex gap-3 max-w-2xl mx-auto">
                   <Input
                     type="search"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search products, categories..."
-                    className="flex-1 bg-muted/50 border-border/50 h-12 rounded-xl"
+                    placeholder="Search premium collections..."
+                    className="flex-1 bg-white/5 backdrop-blur-xl border-white/10 h-14 rounded-2xl text-lg px-6"
                     autoFocus
                   />
                   <Button
                     type="submit"
-                    className="h-12 rounded-xl px-6 gradient-primary text-white"
+                    className="h-14 rounded-2xl px-8 gradient-primary text-white font-black uppercase tracking-widest"
                   >
-                    Search
+                    Find
                   </Button>
                 </div>
               </form>
@@ -212,30 +213,33 @@ export default function Header() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="lg:hidden border-t border-border/50 bg-background overflow-hidden"
+            className="lg:hidden bg-background/95 backdrop-blur-2xl border-t border-white/10 overflow-hidden"
           >
-            <nav className="px-4 py-4 space-y-1">
+            <nav className="px-6 py-10 space-y-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`block px-4 py-3 rounded-xl text-base font-semibold transition-colors ${
+                  className={`block px-6 py-4 rounded-2xl text-2xl font-black font-heading transition-all ${
                     pathname === link.href
-                      ? "text-primary bg-primary/5"
-                      : "text-foreground hover:bg-muted/50"
+                      ? "text-primary translate-x-2"
+                      : "text-muted-foreground hover:text-primary"
                   }`}
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="pt-2 border-t border-border/50">
+              <div className="pt-10 border-t border-white/10">
                 <Link
                   href={isAuthenticated ? "/account" : "/login"}
-                  className="block px-4 py-3 rounded-xl text-base font-semibold text-foreground hover:bg-muted/50"
+                  className="flex items-center justify-between px-6 py-6 rounded-3xl bg-primary text-primary-foreground shadow-xl"
                 >
-                  {isAuthenticated
-                    ? `Hi, ${currentUser?.name || "Account"}`
-                    : "Login / Sign Up"}
+                  <span className="text-xl font-black">
+                    {isAuthenticated
+                      ? `HI, ${currentUser?.name?.toUpperCase() || "ACCOUNT"}`
+                      : "LOG IN"}
+                  </span>
+                  <User className="h-6 w-6" />
                 </Link>
               </div>
             </nav>
