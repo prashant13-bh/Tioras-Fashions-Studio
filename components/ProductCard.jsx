@@ -73,6 +73,13 @@ export default function ProductCard({ product, index = 0 }) {
           </div>
         )}
 
+        {/* Quick View Overlay */}
+        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+          <Button variant="secondary" className="bg-white/90 text-primary font-bold rounded-full px-6 shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            View Details
+          </Button>
+        </div>
+
         {/* Wishlist */}
         <button
           onClick={handleWishlist}

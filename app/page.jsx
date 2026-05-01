@@ -228,35 +228,53 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── CATEGORIES ── */}
-        <section className="py-20 bg-background overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-extrabold mb-4 font-heading">Shop by Category</h2>
-              <div className="w-20 h-1.5 gradient-primary mx-auto rounded-full" />
-            </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-              {[
-                { name: "T-Shirts", img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&q=80&w=800", count: "120+ Items" },
-                { name: "Hoodies", img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=800", count: "85+ Items" },
-                { name: "Caps", img: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80&w=800", count: "40+ Items" },
-                { name: "Sweatshirts", img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=800", count: "60+ Items" },
-              ].map((cat, i) => (
-                <Link key={cat.name} href={`/products?category=${cat.name.toLowerCase()}`} className="group relative aspect-[4/5] overflow-hidden rounded-3xl bg-muted">
-                  <img 
-                    src={cat.img} 
-                    alt={cat.name} 
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute bottom-6 left-6 text-white">
-                    <p className="text-xs font-bold uppercase tracking-widest text-accent mb-1">{cat.count}</p>
-                    <h3 className="text-xl md:text-2xl font-extrabold font-heading">{cat.name}</h3>
-                  </div>
-                </Link>
-              ))}
-            </div>
+        {/* ── CATEGORIES (Auto-Sliding Carousel) ── */}
+        <section className="py-24 bg-background overflow-hidden relative">
+          <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-background to-transparent z-10" />
+          <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-background to-transparent z-10" />
+          
+          <div className="max-w-7xl mx-auto px-4 mb-16 relative z-20">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <h2 className="text-3xl md:text-6xl font-extrabold mb-4 font-heading tracking-tight italic">Explore Collections</h2>
+              <p className="text-muted-foreground text-lg max-w-xl mx-auto">Discover premium apparel designed for customization and style.</p>
+            </motion.div>
+          </div>
+          
+          <div className="flex gap-6 animate-marquee whitespace-nowrap group">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="flex gap-6">
+                {[
+                  { name: "T-Shirts", img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&q=80&w=800", count: "120+ Items" },
+                  { name: "Hoodies", img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&q=80&w=800", count: "85+ Items" },
+                  { name: "Caps", img: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&q=80&w=800", count: "40+ Items" },
+                  { name: "Sweatshirts", img: "https://images.unsplash.com/photo-1529139513075-03019828b174?auto=format&fit=crop&q=80&w=800", count: "60+ Items" },
+                  { name: "Jackets", img: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&q=80&w=800", count: "30+ Items" },
+                  { name: "Activewear", img: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=800", count: "50+ Items" },
+                ].map((cat) => (
+                  <Link 
+                    key={cat.name} 
+                    href={`/products?category=${cat.name.toLowerCase()}`} 
+                    className="relative w-[300px] md:w-[400px] aspect-[16/10] overflow-hidden rounded-[2rem] bg-muted shadow-lg transition-all duration-500 hover:scale-[1.02] inline-block"
+                  >
+                    <img 
+                      src={cat.img} 
+                      alt={cat.name} 
+                      className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                    <div className="absolute bottom-8 left-8 text-white text-left">
+                      <p className="text-xs font-black uppercase tracking-[0.2em] text-accent mb-2">{cat.count}</p>
+                      <h3 className="text-2xl md:text-3xl font-extrabold font-heading tracking-tight">{cat.name}</h3>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ))}
           </div>
         </section>
 
@@ -285,11 +303,33 @@ export default function HomePage() {
             {loading ? (
               <ProductSkeletons />
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              <motion.div 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.1
+                    }
+                  }
+                }}
+                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+              >
                 {products.slice(0, 8).map((product, i) => (
-                  <ProductCard key={product.id} product={product} index={i} />
+                  <motion.div
+                    key={product.id}
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: { opacity: 1, y: 0 }
+                    }}
+                  >
+                    <ProductCard product={product} index={i} />
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             )}
 
             <div className="md:hidden text-center mt-8">

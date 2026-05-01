@@ -6,6 +6,7 @@ import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { CartProvider } from "@/hooks/useCart";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import BottomNav from "@/components/BottomNav";
+import { NewsletterPopup } from "@/components/NewsletterPopup";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -57,6 +58,12 @@ export default function RootLayout({ children }) {
       className={`${outfit.variable} ${jakarta.variable} ${playfair.variable}`}
     >
       <body className="font-body antialiased pb-20 lg:pb-0">
+        <div className="bg-primary text-primary-foreground py-2 text-center text-xs font-bold tracking-widest uppercase overflow-hidden whitespace-nowrap">
+          <div className="animate-marquee inline-block">
+            <span>✨ 10% OFF ON YOUR FIRST CUSTOM ORDER — USE CODE: FIRST10 ✨ &nbsp;&nbsp;&nbsp;&nbsp; 📦 FREE SHIPPING ON ALL ORDERS ABOVE ₹999 ✨ &nbsp;&nbsp;&nbsp;&nbsp; 🧵 NEW EMBROIDERY OPTIONS AVAILABLE NOW ✨ &nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span>✨ 10% OFF ON YOUR FIRST CUSTOM ORDER — USE CODE: FIRST10 ✨ &nbsp;&nbsp;&nbsp;&nbsp; 📦 FREE SHIPPING ON ALL ORDERS ABOVE ₹999 ✨ &nbsp;&nbsp;&nbsp;&nbsp; 🧵 NEW EMBROIDERY OPTIONS AVAILABLE NOW ✨ &nbsp;&nbsp;&nbsp;&nbsp;</span>
+          </div>
+        </div>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>
             <AdminAuthProvider>
@@ -64,6 +71,7 @@ export default function RootLayout({ children }) {
                 <CartProvider>
                   {children}
                   <BottomNav />
+                  <NewsletterPopup />
                   <Toaster richColors position="top-right" />
                 </CartProvider>
               </WishlistProvider>
