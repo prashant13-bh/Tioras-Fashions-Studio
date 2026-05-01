@@ -168,7 +168,7 @@ export default function DesignCanvas({
     }
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = useCallback((e) => {
     if (!isDragging || !selectedLayerId) return;
     const rect = canvasRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) * (CANVAS_WIDTH / rect.width);
