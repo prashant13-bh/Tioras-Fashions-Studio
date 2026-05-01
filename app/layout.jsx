@@ -1,4 +1,3 @@
-import React from "react";
 import { Outfit, Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
@@ -8,6 +7,7 @@ import { CartProvider } from "@/hooks/useCart";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import BottomNav from "@/components/BottomNav";
 import { NewsletterPopup } from "@/components/NewsletterPopup";
+import LoadingManager from "@/components/LoadingManager";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -27,6 +27,13 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   display: "swap",
 });
+
+export const viewport = {
+  themeColor: "#0f172a",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export const metadata = {
   title: {
@@ -58,7 +65,6 @@ export const metadata = {
     description: "Premium embroidery & custom printing studio. Design your signature today.",
     creator: "@tiorasfashions",
   },
-  themeColor: "#0f172a",
 };
 
 export default function RootLayout({ children }) {
@@ -93,33 +99,5 @@ export default function RootLayout({ children }) {
         </LoadingManager>
       </body>
     </html>
-  );
-}
-
-function LoadingManager({ children }) {
-  const [mounted, setMounted] = React.useState(false);
-  
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  return (
-    <>
-      <div 
-        className={`fixed inset-0 z-[9999] bg-background flex flex-col items-center justify-center transition-all duration-700 pointer-events-none ${
-          mounted ? "opacity-0 invisible" : "opacity-100 visible"
-        }`}
-      >
-        <div className="flex flex-col items-center gap-6 animate-pulse">
-           <span className="text-4xl font-black tracking-tighter text-primary font-heading">
-             TIORAS<span className="text-accent italic">.</span>
-           </span>
-           <div className="w-12 h-[2px] bg-accent/30 overflow-hidden">
-              <div className="w-full h-full bg-accent animate-progress" />
-           </div>
-        </div>
-      </div>
-      {children}
-    </>
   );
 }

@@ -3,8 +3,11 @@
 import { useEffect, useState } from "react";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { ShoppingCart, Users, Package, IndianRupee, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import adminPb from "@/lib/pocketbase";
 
 export default function AdminDashboard() {
   const { isAdmin, loading } = useAdminAuth();
@@ -134,7 +137,6 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-      <div className="grid gap-6 lg:grid-cols-2">
         <Card className="premium-card">
           <CardHeader>
             <CardTitle className="text-lg font-bold font-heading">Recent Orders</CardTitle>
@@ -205,7 +207,6 @@ export default function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
-      </div>
       </div>
     </div>
   );
