@@ -5,11 +5,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import DesignCanvas from "@/components/DesignStudio/DesignCanvas";
 import { 
-  Tshirt, 
-  ShoppingBag, 
   Info, 
   HelpCircle, 
-  ArrowRight,
   Sparkles,
   Palette
 } from "lucide-react";
